@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/goyalsushant/PDF-Reader/issues"
   },
-  "homepage": "https://github.com/goyalsushant/PDF-Reader#readme"
+  "homepage": "https://github.com/goyalsushant/PDF-Reader#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^1.19.2",
+    "pdfreader": "^1.0.4"
+  }
 }
