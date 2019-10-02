@@ -14,7 +14,7 @@ function printRows() {
     .forEach(y => {
       pageString = pageString + (rows[y] ? rows[y] : []) + ' '
     });
-    console.log(pageString.slice(pageString.search('Institution:')+ 'Institution:'.length, pageString.search('S.No.')))
+    console.log(pageString.slice(pageString.search('Institution:')+ 'Institution:'.length, pageString.search('S.No.')).replace(',',''))
 }
 
 app.get('/', (req,res)=>{
