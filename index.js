@@ -6,7 +6,7 @@ const app = express()
 const port = 3000
 
 var rows = {}; // indexed by y-position
- 
+
 function printRows() {
   var pageString = '';
   Object.keys(rows) // => array of y-positions (type: float)
