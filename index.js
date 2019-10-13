@@ -6,6 +6,7 @@ const app = express()
 const port = 3000
 var instituteName = '';
 var rows = {}; // indexed by y-position
+var allStudentData = {};
 
 function printRows() {
   var pageString = '';
@@ -21,32 +22,41 @@ function printRows() {
       var n = 0
       var subject_codes = {}
       while (11 * n + 2 < subjectPageString.length) {
-        subject_codes[subjectPageString[11 * n + 2]] = subjectPageString[11 * n + 4]
+        subject_codes[subjectPageString[11 * n + 2]] = subjectPageString[11 * n + 4]  
         n++
       }
+      subjectLength = Object.keys(subject_codes).length
     } else {
       pageString = pageString.substr(pageString.indexOf(instituteName) + instituteName.length)
       var enrollmentNumbers = pageString.match(/[\d+]{11},/g)
       var enrolIndex = 0
       var studentString = []
-      // enrollmentNumbers.forEach(enrollment => {
-      //   pageString.substr(some, pageString.indexOf(enrollment))
-      //   pageString = pageString 
-      // }) 
-      // console.log(enrollmentNumbers);
-      // console.log(enrollmentNumbers.length);
       while (enrolIndex <= (enrollmentNumbers.length - 1)) {
         fullStudentString = pageString.slice(pageString.indexOf(enrollmentNumbers[enrolIndex]), pageString.indexOf(enrollmentNumbers[enrolIndex + 1]))
         studentString.push(fullStudentString.substr(0, fullStudentString.indexOf('SchemeID:')))
         enrolIndex++
       }
-      console.log(studentString);
-      // var updatedSubjectCodes = subjectCodes.map(value => {
-      //   var updatedValue;
-      //   // updatedValue = value.trim()
-      //   updatedValue = value.substr(0, value.indexOf('(') != -1 ? value.indexOf('(') : value.length)
-      //   return updatedValue
-      // })
+      var updatedSubjectCodes = studentString.map(value => {
+        var updatedValue;
+        var studentEnroll = value.split(',')[0]
+        updatedValue = value.split(/\([^)]*\)[,  ]*/)
+        var subjectChosen = []
+        subjectChosen.push(value.split(',')[1].replace(/\([^)]*\)[,  ]*/, ''))
+        for (let index = 1; index < updatedValue.length-1; index++) {
+          subjectChosen.push(updatedValue[index])
+          updatedValue.splice(updatedValue[index],1)
+        }
+        console.log(subjectChosen)
+        studentName = value.slice(value.indexOf(value.match(/[a-zA-Z]/)), value.indexOf('SID:')).trim()
+        // updatedValue = value.substr(0, value.indexOf('(') != -1 ? value.indexOf('(') : value.length)
+        allStudentData[studentEnroll] = {
+          'name': studentName,
+          'institute': instituteName.trim(),
+          'enrollment_number': studentEnroll,
+        }
+        // console.log(updatedValue)
+        return updatedValue
+      })
     }
   }
 }
