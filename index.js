@@ -41,14 +41,21 @@ function printRows() {
         var studentEnroll = value.split(',')[0]
         updatedValue = value.split(/\([^)]*\)[,  ]*/)
         var subjectChosen = []
+        var index
         subjectChosen.push(value.split(',')[1].replace(/\([^)]*\)[,  ]*/, ''))
-        for (let index = 1; index < updatedValue.length-1; index++) {
+        for (index = 1; index < updatedValue.length-1; index++) {
           subjectChosen.push(updatedValue[index])
-          updatedValue.splice(updatedValue[index],1)
         }
         console.log(subjectChosen)
         studentName = value.slice(value.indexOf(value.match(/[a-zA-Z]/)), value.indexOf('SID:')).trim()
-        // updatedValue = value.substr(0, value.indexOf('(') != -1 ? value.indexOf('(') : value.length)
+        marksString = updatedValue[index].slice(updatedValue[index].indexOf('SID:')+4).trim().split(' ')
+        marksArray = []
+        for (index=1; index<marksString.length;index++){
+          if(marksString[index].replace(/[\s,]/g, '')) {
+            console.log(marksString[index])
+          }
+        }
+        process.exit(0)
         allStudentData[studentEnroll] = {
           'name': studentName,
           'institute': instituteName.trim(),
