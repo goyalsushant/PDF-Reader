@@ -48,13 +48,41 @@ function printRows() {
         }
         console.log(subjectChosen)
         studentName = value.slice(value.indexOf(value.match(/[a-zA-Z]/)), value.indexOf('SID:')).trim()
-        marksString = updatedValue[index].slice(updatedValue[index].indexOf('SID:')+4).trim().split(' ')
-        marksArray = []
-        for (index=1; index<marksString.length;index++){
-          if(marksString[index].replace(/[\s,]/g, '')) {
-            console.log(marksString[index])
+        marksString = updatedValue[index].slice(updatedValue[index].indexOf('SID:')+4).trim().split(',')
+        marksArray = {}
+        console.log(marksString.length)
+        for (index=0; index<marksString.length;index++){
+          var marks = marksString[index].trim().split(' ')
+          if (index === 0) {
+            marks.shift()
+            marksArray[subjectChosen[index]] = {
+              'internal': marks[1],
+              'external': marks[3],
+            }
+          }
+          else {
+            if(marks[2] === undefined) {
+              if(marksString[index+1].trim().split(' ')[2] !== undefined) {
+                continue
+              }
+              else{
+                marksArray[subjectChosen[index]] = {
+                  'internal': marks[0],
+                  'external': marksString[index+1].trim(),
+                }
+              }
+            }
+            else {
+              marksArray[subjectChosen[index]] = {
+                'internal': marks[0],
+                'external': marks[2],
+              }
+            }
           }
         }
+        console.log()
+        console.log()
+        console.log(marksArray)
         process.exit(0)
         allStudentData[studentEnroll] = {
           'name': studentName,
