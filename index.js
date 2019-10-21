@@ -7,6 +7,7 @@ const port = 3000
 var instituteName = '';
 var rows = {}; // indexed by y-position
 var allStudentData = {};
+var subject_codes = {}
 
 function printRows() {
   var pageString = '';
@@ -20,7 +21,6 @@ function printRows() {
       instituteName = getInstituteName(pageString)
       var subjectPageString = pageString.split('Pass Marks')[1].split(',')
       var n = 0
-      var subject_codes = {}
       while (11 * n + 2 < subjectPageString.length) {
         subject_codes[subjectPageString[11 * n + 2]] = subjectPageString[11 * n + 4]  
         n++
@@ -46,53 +46,37 @@ function printRows() {
         for (index = 1; index < updatedValue.length-1; index++) {
           subjectChosen.push(updatedValue[index])
         }
-        console.log(subjectChosen)
         studentName = value.slice(value.indexOf(value.match(/[a-zA-Z]/)), value.indexOf('SID:')).trim()
-        marksString = updatedValue[index].slice(updatedValue[index].indexOf('SID:')+4).trim().split(',')
+        marksString = updatedValue[index].replace('-,', ' - ').slice(updatedValue[index].indexOf('SID:')+4).trim().split(',')
         marksArray = {}
-        console.log(marksString.length)
         for (index=0; index<marksString.length;index++){
           var marks = marksString[index].trim().split(' ')
+          if(subject_codes.hasOwnProperty(subjectChosen[index])) {
+            subjectName = subject_codes[subjectChosen[index]]
+          }
           if (index === 0) {
-            marks.shift()
-            marksArray[subjectChosen[index]] = {
-              'internal': marks[1],
-              'external': marks[3],
+            marksArray[subjectName] = {
+              'internal': marks[2],
+              'external': marks[4],
             }
           }
           else {
-            if(marks[2] === undefined) {
-              if(marksString[index+1].trim().split(' ')[2] !== undefined) {
-                continue
-              }
-              else{
-                marksArray[subjectChosen[index]] = {
-                  'internal': marks[0],
-                  'external': marksString[index+1].trim(),
-                }
-              }
-            }
-            else {
-              marksArray[subjectChosen[index]] = {
-                'internal': marks[0],
-                'external': marks[2],
-              }
+            marksArray[subjectName] = {
+              'internal': marks[0],
+              'external': marks[2],
             }
           }
         }
-        console.log()
-        console.log()
-        console.log(marksArray)
-        process.exit(0)
         allStudentData[studentEnroll] = {
           'name': studentName,
-          'institute': instituteName.trim(),
+          'institute': instituteName.replace(',','').trim(),
           'enrollment_number': studentEnroll,
+          'marks': marksArray,
         }
-        // console.log(updatedValue)
         return updatedValue
       })
     }
+    console.log(allStudentData)
   }
 }
 app.get('/', (req, res) => {
