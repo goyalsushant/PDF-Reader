@@ -49,6 +49,7 @@ function printRows() {
         studentName = value.slice(value.indexOf(value.match(/[a-zA-Z]/)), value.indexOf('SID:')).trim()
         marksString = updatedValue[index].replace('-,', ' - ').slice(updatedValue[index].indexOf('SID:')+4).trim().split(',')
         marksArray = {}
+        totalMarks = 0
         for (index=0; index<marksString.length;index++){
           var marks = marksString[index].trim().split(' ')
           if(subject_codes.hasOwnProperty(subjectChosen[index])) {
@@ -71,16 +72,21 @@ function printRows() {
           'name': studentName,
           'institute': instituteName.replace(',','').trim(),
           'enrollment_number': studentEnroll,
+          'total_marks': totalMarks,
           'marks': marksArray,
         }
         return updatedValue
       })
     }
-    console.log(allStudentData)
   }
 }
+
 app.get('/', (req, res) => {
   res.send('Hello World !!')
+})
+
+app.get('/data', (req, res) => {
+  res.send(JSON.parse(JSON.stringify(allStudentData, null, 4)))
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}`))
