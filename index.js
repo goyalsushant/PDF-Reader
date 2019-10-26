@@ -8,6 +8,7 @@ var instituteName = '';
 var rows = {}; // indexed by y-position
 var allStudentData = {};
 var subject_codes = {}
+var pageNumber = 0
 
 function printRows() {
   var pageString = '';
@@ -56,16 +57,26 @@ function printRows() {
             subjectName = subject_codes[subjectChosen[index]]
           }
           if (index === 0) {
+            internalMarks = isNaN(parseInt(marks[2])) ? 0 : parseInt(marks[2])
+            externalMarks = isNaN(parseInt(marks[4])) ? 0 : parseInt(marks[4])
+            subjectTotal = internalMarks + externalMarks
             marksArray[subjectName] = {
-              'internal': marks[2],
-              'external': marks[4],
+              'internal': internalMarks,
+              'external': externalMarks,
+              'total': subjectTotal,
             }
+            totalMarks+=subjectTotal
           }
           else {
+            internalMarks = isNaN(parseInt(marks[0])) ? 0 : parseInt(marks[0])
+            externalMarks = isNaN(parseInt(marks[2])) ? 0 : parseInt(marks[2])
+            subjectTotal = internalMarks + externalMarks
             marksArray[subjectName] = {
-              'internal': marks[0],
-              'external': marks[2],
+              'internal': internalMarks,
+              'external': externalMarks,
+              'total': subjectTotal,
             }
+            totalMarks+=subjectTotal
           }
         }
         allStudentData[studentEnroll] = {
@@ -73,12 +84,15 @@ function printRows() {
           'institute': instituteName.replace(',','').trim(),
           'enrollment_number': studentEnroll,
           'total_marks': totalMarks,
+          'percentage': 'nope',
           'marks': marksArray,
         }
         return updatedValue
       })
     }
   }
+  pageNumber++;
+  console.log('Page NUmber :  ' + pageNumber)
 }
 
 app.get('/', (req, res) => {
@@ -91,7 +105,7 @@ app.get('/data', (req, res) => {
 
 app.listen(port, () => console.log(`Example app listening on port ${port}`))
 
-pdfReaderObj.parseFileItems("sample_2.pdf", function (err, item) {
+pdfReaderObj.parseFileItems("sample_full.pdf", function (err, item) {
   if (!item || item.page) {
     // end of file, or page
     printRows();
