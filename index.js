@@ -8,7 +8,6 @@ var instituteName = '';
 var rows = {}; // indexed by y-position
 var allStudentData = {};
 var subject_codes = {}
-var pageNumber = 0
 
 function printRows() {
   var pageString = '';
@@ -84,15 +83,13 @@ function printRows() {
           'institute': instituteName.replace(',','').trim(),
           'enrollment_number': studentEnroll,
           'total_marks': totalMarks,
-          'percentage': 'nope',
+          'percentage': (totalMarks/subjectLength).toFixed(2),
           'marks': marksArray,
         }
         return updatedValue
       })
     }
   }
-  pageNumber++;
-  console.log('Page NUmber :  ' + pageNumber)
 }
 
 app.get('/', (req, res) => {
@@ -105,7 +102,7 @@ app.get('/data', (req, res) => {
 
 app.listen(port, () => console.log(`Example app listening on port ${port}`))
 
-pdfReaderObj.parseFileItems("sample_full.pdf", function (err, item) {
+pdfReaderObj.parseFileItems("sample_full_1.pdf", function (err, item) {
   if (!item || item.page) {
     // end of file, or page
     printRows();
@@ -118,5 +115,4 @@ pdfReaderObj.parseFileItems("sample_full.pdf", function (err, item) {
 
 function getInstituteName(pageText) {
   return pageText.slice(pageText.search('Institution:') + 'Institution:'.length, pageText.search('S.No.'))
-  // return pageText.slice(pageText.search('Institution:')+ 'Institution:'.length, pageText.search('S.No.')).replace(',','')
 }
