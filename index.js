@@ -1,5 +1,6 @@
 var express = require('express')
 var pdfReader = require('pdfreader')
+var fs = require('fs')
 var pdfReaderObj = new pdfReader.PdfReader
 
 const app = express()
@@ -97,7 +98,13 @@ app.get('/', (req, res) => {
 })
 
 app.get('/data', (req, res) => {
-  res.send(JSON.parse(JSON.stringify(allStudentData, null, 4)))
+  jsonContent = JSON.stringify(allStudentData, null, 4)
+  fs.writeFile("1.json", jsonContent, 'utf8', function(err) {
+    if(err) {
+        return console.log(err);
+    }
+    console.log("The file was saved!");
+  });
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}`))
