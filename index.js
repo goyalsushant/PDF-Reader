@@ -18,6 +18,7 @@ function printRows() {
       pageString = pageString + (rows[y] ? rows[y] : []) + ' '
     });
   if (pageString.length != 0) {
+    var pageString = pageString.replace('TEC,HNOLOGY', 'TECHNOLOGY')
     if (getInstituteName(pageString) != '') {
       instituteName = getInstituteName(pageString)
       var subjectPageString = pageString.split('Pass Marks')[1].split(',')
@@ -84,7 +85,7 @@ function printRows() {
           'institute': instituteName.replace(',','').trim(),
           'enrollment_number': studentEnroll,
           'total_marks': totalMarks,
-          'percentage': (totalMarks/subjectLength).toFixed(2),
+          'percentage': (totalMarks/subjectChosen.length).toFixed(2),
           'marks': marksArray,
         }
         return updatedValue
@@ -99,17 +100,18 @@ app.get('/', (req, res) => {
 
 app.get('/data', (req, res) => {
   jsonContent = JSON.stringify(allStudentData, null, 4)
-  fs.writeFile("1.json", jsonContent, 'utf8', function(err) {
+  fs.writeFile("6.json", jsonContent, 'utf8', function(err) {
     if(err) {
         return console.log(err);
     }
+    res.send('The file was saved!');
     console.log("The file was saved!");
   });
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}`))
 
-pdfReaderObj.parseFileItems("sample_full_1.pdf", function (err, item) {
+pdfReaderObj.parseFileItems("sample_full_6.pdf", function (err, item) {
   if (!item || item.page) {
     // end of file, or page
     printRows();
