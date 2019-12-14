@@ -19,6 +19,7 @@ function printRows() {
     });
   if (pageString.length != 0) {
     var pageString = pageString.replace('TEC,HNOLOGY', 'TECHNOLOGY')
+    var pageString = pageString.replace('ADMINISTRA,TION', 'ADMINISTRATION')
     if (getInstituteName(pageString) != '') {
       instituteName = getInstituteName(pageString)
       var subjectPageString = pageString.split('Pass Marks')[1].split(',')
