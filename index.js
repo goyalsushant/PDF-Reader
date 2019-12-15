@@ -20,6 +20,8 @@ function printRows() {
   if (pageString.length != 0) {
     var pageString = pageString.replace('TEC,HNOLOGY', 'TECHNOLOGY')
     var pageString = pageString.replace('ADMINISTRA,TION', 'ADMINISTRATION')
+    var pageString = pageString.replace('ENGINE,ERS', 'ENGINEERS')
+    var pageString = pageString.replace('CERTIFICATI,ON', 'CERTIFICATION')
     if (getInstituteName(pageString) != '') {
       instituteName = getInstituteName(pageString)
       var subjectPageString = pageString.split('Pass Marks')[1].split(',')
@@ -101,7 +103,7 @@ app.get('/', (req, res) => {
 
 app.get('/data', (req, res) => {
   jsonContent = JSON.stringify(allStudentData, null, 4)
-  fs.writeFile("6.json", jsonContent, 'utf8', function(err) {
+  fs.writeFile("7.json", jsonContent, 'utf8', function(err) {
     if(err) {
         return console.log(err);
     }
@@ -112,7 +114,7 @@ app.get('/data', (req, res) => {
 
 app.listen(port, () => console.log(`Example app listening on port ${port}`))
 
-pdfReaderObj.parseFileItems("sample_full_6.pdf", function (err, item) {
+pdfReaderObj.parseFileItems("sample_full_7.pdf", function (err, item) {
   if (!item || item.page) {
     // end of file, or page
     printRows();
