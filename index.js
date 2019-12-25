@@ -1,14 +1,32 @@
 var express = require('express')
 var pdfReader = require('pdfreader')
 var fs = require('fs')
-var pdfReaderObj = new pdfReader.PdfReader
+var MongoCLient = require('mongodb').MongoClient;
 
+var dbUrl = 'mongodb://result:result123@ds357708.mlab.com:57708/ipu_result'
+
+var pdfReaderObj = new pdfReader.PdfReader
+var sem1 = require('./1.json')
+var sem2 = require('./2.json')
+var sem3 = require('./3.json')
+var sem4 = require('./4.json')
+var sem5 = require('./5.json')
+var sem6 = require('./6.json')
+var sem7 = require('./7.json')
+var sem8 = require('./8.json')
+
+var files = [sem1, sem2, sem3, sem4, sem5, sem6, sem7, sem8];
 const app = express()
 const port = 3000
 var instituteName = '';
 var rows = {}; // indexed by y-position
 var allStudentData = {};
 var subject_codes = {}
+
+MongoCLient.connect(dbUrl, (err, db) => {
+  console.log("cONNECTED");
+  db.close()
+})
 
 function printRows() {
   var pageString = '';
@@ -112,6 +130,9 @@ app.get('/data', (req, res) => {
   });
 })
 
+app.get('/:sem/:id', (req, res) => {
+  res.send(files[parseInt(req.params.sem)-1][req.params.id])
+})
 app.listen(port, () => console.log(`Example app listening on port ${port}`))
 
 pdfReaderObj.parseFileItems("sample_full_7.pdf", function (err, item) {
