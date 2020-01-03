@@ -3,7 +3,7 @@ var pdfReader = require('pdfreader');
 var fs = require('fs');
 var MongoCLient = require('mongodb').MongoClient;
 
-var dbUrl = 'mongodb://result:result123@ds357708.mlab.com:57708/ipu_result';
+var dbUrl = 'http://localhost:27017/';
 
 var pdfReaderObj = new pdfReader.PdfReader();
 var sem1 = require('./1.json');
@@ -25,6 +25,12 @@ var subject_codes = {};
 
 MongoCLient.connect(dbUrl, (err, db) => {
   console.log("CONNECTED");
+  files.forEach((element, index) => {
+    db.db('ipu_result').createCollection('sem_' + (index+1), (err, res) => {
+      if(err) throw err;
+      console.log('Collection created');
+    });
+  });
   db.close();
 });
 
