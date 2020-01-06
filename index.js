@@ -1,7 +1,7 @@
 var express = require('express');
 var pdfReader = require('pdfreader');
+var dbConn = require('./database/connection')
 var fs = require('fs');
-var MongoCLient = require('mongodb').MongoClient;
 
 var dbUrl = 'http://localhost:27017/';
 
@@ -23,16 +23,13 @@ var rows = {}; // indexed by y-position
 var allStudentData = {};
 var subject_codes = {};
 
-MongoCLient.connect(dbUrl, (err, db) => {
-  console.log("CONNECTED");
-  files.forEach((element, index) => {
-    db.db('ipu_result').createCollection('sem_' + (index+1), (err, res) => {
-      if(err) throw err;
-      console.log('Collection created');
-    });
-  });
-  db.close();
-});
+files.forEach((element, index) => {
+  dbConn.createCollection(index)
+})
+
+files.forEach((element, index) => {
+  dbConn.insertDocuments(index, files)
+})
 
 function printRows() {
   var pageString = '';
